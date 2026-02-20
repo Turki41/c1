@@ -1,0 +1,194 @@
+import React, { useState } from "react";
+
+const FEEDBACK_API_URL = "REPLACE/prod/submit"; // Replace with your API URL
+
+export default function FeedbackForm() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const [file, setFile] = useState(null);
+  const [modalMessage, setModalMessage] = useState("");
+  const [showModal, setShowModal] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  const convertFileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(",")[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    let file_base64 = null;
+
+    try {
+      if (file) {
+        file_base64 = await convertFileToBase64(file);
+      }
+
+      const res = await fetch(FEEDBACK_API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          file_base64,
+        }),
+      });
+
+      const data = await res.json();
+      setModalMessage(data.message || "Feedback submitted successfully!");
+      setShowModal(true);
+    } catch (err) {
+      setModalMessage("Submission failed. Please try again later.");
+      setShowModal(true);
+    }
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    window.location.reload();
+  };
+
+  return (
+    <>
+      <style>{`
+        body {
+          font-family: 'Roboto', sans-serif;
+          padding: 2rem;
+          min-height: 100vh;
+          margin: 0;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          position: relative;
+          color: #333;
+        }
+
+        form {
+          background: rgba(255, 255, 255, 0.95);
+          max-width: 500px;
+          margin: 2rem auto;
+          padding: 2rem;
+          border-radius: 16px;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        input, textarea {
+          width: 100%;
+          margin-top: 10px;
+          padding: 12px;
+          border: 1px solid rgba(221, 221, 221, 0.8);
+          border-radius: 8px;
+          font-size: 16px;
+        }
+
+        button {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          border: none;
+          padding: 12px 20px;
+          margin-top: 15px;
+          border-radius: 8px;
+          cursor: pointer;
+          font-size: 16px;
+          width: 100%;
+        }
+
+        h2 {
+          font-size: 28px;
+          margin-bottom: 20px;
+          color: #4a5568;
+          text-align: center;
+        }
+
+        .modal {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: fixed;
+          z-index: 1000;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+          background: white;
+          padding: 2rem;
+          border-radius: 16px;
+          text-align: center;
+          max-width: 400px;
+          width: 90%;
+        }
+      `}</style>
+
+      <form onSubmit={handleSubmit}>
+        <h2>Feedback Form Test 3</h2>
+
+        <input
+          type="text"
+          id="name"
+          placeholder="Your Name"
+          required
+          value={formData.name}
+          onChange={handleChange}
+        />
+
+        <input
+          type="email"
+          id="email"
+          placeholder="Your Email"
+          required
+          value={formData.email}
+          onChange={handleChange}
+        />
+
+        <textarea
+          id="message"
+          placeholder="Your Message"
+          required
+          value={formData.message}
+          onChange={handleChange}
+        />
+
+        <input
+          type="file"
+          accept="application/pdf"
+          onChange={handleFileChange}
+        />
+
+        <button type="submit">Submit</button>
+      </form>
+
+      {showModal && (
+        <div className="modal" onClick={closeModal}>
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <p>{modalMessage}</p>
+            <button onClick={closeModal}>Okay</button>
+          </div>
+        </div>
+      )}
+
+    </>
+  );
+}
