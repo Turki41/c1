@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 const FEEDBACK_API_URL = "REPLACE/prod/submit"; // Replace with your API URL
 
@@ -13,27 +13,36 @@ export default function FeedbackForm() {
   const [modalMessage, setModalMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     setFormData({
       ...formData,
       [e.target.id]: e.target.value,
     });
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e: any) => {
     setFile(e.target.files[0]);
   };
 
-  const convertFileToBase64 = (file) => {
+  const convertFileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = () => resolve(reader.result.split(",")[1]);
-      reader.onerror = reject;
+
+      reader.onload = () => {
+        if (typeof reader.result === "string") {
+          const base64 = reader.result.split(",")[1];
+          resolve(base64);
+        } else {
+          reject(new Error("Failed to convert file to base64"));
+        }
+      };
+
+      reader.onerror = () => reject(reader.error);
       reader.readAsDataURL(file);
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     let file_base64 = null;
@@ -140,7 +149,7 @@ export default function FeedbackForm() {
       `}</style>
 
       <form onSubmit={handleSubmit}>
-        <h2>Feedback Form Test 3</h2>
+        <h2>Feedback Form Test 4</h2>
 
         <input
           type="text"
