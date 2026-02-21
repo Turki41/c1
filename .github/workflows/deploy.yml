@@ -2,7 +2,8 @@ name: Deploy Frontend to S3 + CloudFront
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   deploy:
@@ -35,8 +36,9 @@ jobs:
           aws s3 sync ./dist s3://${{ secrets.S3_BUCKET }} --delete
 
       - name: Invalidate CloudFront cache
-        if: ${{ secrets.CLOUDFRONT_DIST_ID != '' }}
+        env:
+          CLOUDFRONT_DIST_ID: ${{ secrets.CLOUDFRONT_DIST_ID }}
         run: |
           aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.CLOUDFRONT_DIST_ID }} \
+            --distribution-id $CLOUDFRONT_DIST_ID \
             --paths "/*"
