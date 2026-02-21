@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const FEEDBACK_API_URL = "REPLACE/prod/submit"; // Replace with your API URL
+const FEEDBACK_API_URL = import.meta.env.VITE_FEEDBACK_API_URL; 
 
 export default function FeedbackForm() {
   const [formData, setFormData] = useState({
@@ -149,7 +149,7 @@ export default function FeedbackForm() {
       `}</style>
 
       <form onSubmit={handleSubmit}>
-        <h2>Feedback Form Test 4</h2>
+        <h2>Feedback Form Test 5</h2>
 
         <input
           type="text"
