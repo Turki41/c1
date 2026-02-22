@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const FEEDBACK_API_URL = import.meta.env.VITE_FEEDBACK_API_URL; 
+const FEEDBACK_API_URL = import.meta.env.VITE_FEEDBACK_API_URL;
 
 export default function FeedbackForm() {
   const [formData, setFormData] = useState({
@@ -86,15 +86,26 @@ export default function FeedbackForm() {
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           position: relative;
           color: #333;
+          width: 100%;
+          hight: 100%;
+          display: flex;
+          overflow: hidden;
+          justify-content: center;
+          align-items: center;
         }
 
         form {
-          background: rgba(255, 255, 255, 0.95);
-          max-width: 500px;
+          background: rgba(255, 255, 255, 0.8);
+          width: 500px;
           margin: 2rem auto;
           padding: 2rem;
           border-radius: 16px;
           box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+          display: flex;
+          flex-direction: column;
+          width: 450px;
+          justify-content: center;
+          align-items: center;
         }
 
         input, textarea {
@@ -104,6 +115,8 @@ export default function FeedbackForm() {
           border: 1px solid rgba(221, 221, 221, 0.8);
           border-radius: 8px;
           font-size: 16px;
+          background: rgba(255, 255, 255, 1);
+          resize: none;
         }
 
         button {
