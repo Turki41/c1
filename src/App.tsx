@@ -117,6 +117,7 @@ export default function FeedbackForm() {
           font-size: 16px;
           background: rgba(255, 255, 255, 1);
           resize: none;
+          color: black;
         }
 
         button {
