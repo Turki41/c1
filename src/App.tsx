@@ -12,6 +12,7 @@ export default function FeedbackForm() {
   const [file, setFile] = useState(null);
   const [modalMessage, setModalMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [showImage, setShowImage] = useState(false)
 
   const handleChange = (e: any) => {
     setFormData({
@@ -76,7 +77,7 @@ export default function FeedbackForm() {
   };
 
   return (
-    <>
+    <div className="main">
       <style>{`
         body {
           font-family: 'Roboto', sans-serif;
@@ -92,6 +93,13 @@ export default function FeedbackForm() {
           overflow: hidden;
           justify-content: center;
           align-items: center;
+        }
+
+        .main {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         }
 
         form {
@@ -160,6 +168,39 @@ export default function FeedbackForm() {
           max-width: 400px;
           width: 90%;
         }
+
+        .arc-btn {
+           max-width: 400px;
+        }
+
+       .arc-container {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background: rgba(0, 0, 0, 0.85);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 2000;
+        }
+        
+        .arc-container img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
+
+        .close-btn {
+          position: absolute;
+          top: 20px;
+          right: 30px;
+          color: white;
+          font-size: 40px;
+          cursor: pointer;
+          z-index: 2100;
+        }
       `}</style>
 
       <form onSubmit={handleSubmit}>
@@ -200,6 +241,15 @@ export default function FeedbackForm() {
         <button type="submit">Submit</button>
       </form>
 
+      <button className="arc-btn" onClick={() => setShowImage(true)}>Architecture</button>
+
+      {showImage &&
+        <div className="arc-container">
+          <h1 className="close-btn" onClick={() => setShowImage(false)}>X</h1>
+          <img src="/architecture.png" alt="Architecture" />
+        </div>
+      }
+      
       {showModal && (
         <div className="modal" onClick={closeModal}>
           <div
@@ -212,6 +262,6 @@ export default function FeedbackForm() {
         </div>
       )}
 
-    </>
+    </div>
   );
 }
